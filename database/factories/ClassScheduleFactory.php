@@ -16,9 +16,9 @@ class ClassScheduleFactory extends Factory
      */
     public function definition(): array
     {
-        $classes = \App\Models\TaClass::all()->random();
+        $classes = \App\Models\Classes::all()->random();
         
-        $mode = \App\Models\Mode::all()->random();
+        $mode = \App\Models\ClassMode::all()->random();
         $room = \App\Models\Room::all()->random();
         $day = $this->faker->randomElement(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
         $start = date("g:i A", strtotime($this->faker->time()));
