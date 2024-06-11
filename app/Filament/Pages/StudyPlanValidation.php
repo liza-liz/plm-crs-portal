@@ -73,7 +73,7 @@ class StudyPlanValidation extends Page implements HasTable
                                             'year_level' => $class ? $class->minimum_year_level : '', // empty string
                                             'semester' => $aysem ? $aysem->semester : '', // empty string
                                         ]);
-                                    });
+                                    })->sortBy('year_level')->values(); // Sort by year level
                                     $set('courses', $courseData->toArray());
                                 })
                                 ->columns(6)
@@ -83,7 +83,6 @@ class StudyPlanValidation extends Page implements HasTable
                     ->modalHeading('Study Plan Details')
                     ->modalButton('Close')
                     ->modalWidth('6xl'),
-
 
                 Action::make('approve')
                     ->label('Approve')
