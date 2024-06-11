@@ -143,7 +143,7 @@ class BlockclassesManagement extends Page implements HasTable
                     }),
                 TextInput::make('block_id')
                     ->label('Block ID')
-               		->hint('Block ID (Don\'t edit this)')
+               		 ->hint('This field is automatically populated based on the selected section and should not be edited.')
                     ->disabled(fn(\Filament\Forms\Get $get) => $get('block_id_disabled') ?? true)
                     ->required(),
                 TextInput::make('year_level')
