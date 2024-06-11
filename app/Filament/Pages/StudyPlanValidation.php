@@ -81,7 +81,9 @@ class StudyPlanValidation extends Page implements HasTable
                         ];
                     })
                     ->modalHeading('Study Plan Details')
-                    ->modalButton('Close'),
+                    ->modalButton('Close')
+                    ->modalWidth('6xl'),
+
 
                 Action::make('approve')
                     ->label('Approve')
