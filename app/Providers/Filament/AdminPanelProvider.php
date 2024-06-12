@@ -34,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon('img/image_plm.png')
           	->brandLogo('img/plm-with-header.png')
           	->brandLogoHeight('4rem')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->navigationGroups([
                 NavigationGroup::make()
                      ->label('Faculty Affairs'),

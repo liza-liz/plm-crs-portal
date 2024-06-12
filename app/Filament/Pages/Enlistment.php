@@ -34,7 +34,7 @@ class Enlistment extends Page implements HasTable
     public $view_registration_status;
     public $view_student_block;
     public $view_year_level;
-    public $view_program_code;
+    public $view_program_code, $view_section;
     public $blockCapacity;
 
     public function setYearLevel(int $yearLevel)
