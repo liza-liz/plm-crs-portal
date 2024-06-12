@@ -6,6 +6,7 @@ use App\Filament\Resources\ScheduleResource\Pages;
 use App\Filament\Resources\ScheduleResource\RelationManagers;
 use App\Enums\ClassRestrictionScopeEnum;
 use App\Models\Aysem;
+use App\Models\BiologicalSex;
 use App\Models\Block;
 use App\Models\Classes;
 use App\Models\ClassMode;
@@ -76,13 +77,18 @@ class ScheduleResource extends Resource
                                     $section = $block->section;
                                     $blockId = $block->id;
                         
-                                    $formattedString = "{$programCode} {$yearLevel}-{$section} ({$blockId})";
+                                    $formattedString = "{$programCode} {$yearLevel}-{$section}";
                                     return [$blockId => $formattedString];
                                 })->toArray();
                         
+                                // Sort the array by its values while maintaining key-value association
+                                asort($formattedBlocks);
+
                                 return $formattedBlocks;
                             })
                             ->label('Section')
+                            ->preload()
+                            ->searchable()
                             ->required()                                         
                             ->columnSpan(1),
                         Components\TextInput::make('nstp_activity')
@@ -93,6 +99,7 @@ class ScheduleResource extends Resource
                             ->readOnly()
                             ->label('Credits')
                             ->numeric()
+                            ->live()
                             ->columnSpan(2),
                         Components\TextInput::make('actual_units')
                             ->label('Actual Credits')
@@ -192,10 +199,6 @@ class ScheduleResource extends Resource
                             ->schema([
                                 Components\Select::make('scope')
                                 ->options([
-                                    'block' => ClassRestrictionScopeEnum::block->value,
-                                    'college' => ClassRestrictionScopeEnum::college->value,
-                                    'program' => ClassRestrictionScopeEnum::program->value,
-                                    'program & year-level' => ClassRestrictionScopeEnum::program_and_year->value,
                                     'user' => ClassRestrictionScopeEnum::user->value,
                                     'gender' => ClassRestrictionScopeEnum::gender->value,
                                 ])
@@ -208,43 +211,11 @@ class ScheduleResource extends Resource
                                             $scope = $get('scope');
                                             $restrictions = [];
                                             switch ($scope) {
-                                                case 'block':
-                                                    $restrictions = Block::with('program')->get()->mapWithKeys(function ($block) {
-                                                        $programCode = $block->program->program_code;
-                                                        $yearLevel = $block->year_level;
-                                                        $section = $block->section;
-                                                        $blockId = $block->id;
-                                                    
-                                                        $value = "{$programCode} {$yearLevel}-{$section} ({$blockId})";
-                                                        return [$value => $value];
-                                                    })->toArray();
-                                                    break;
-                                                case 'college':
-                                                    $restrictions = College::all()->pluck('college_name', 'college_name')->toArray();
-                                                    break;
-                                                case 'program':
-                                                    $restrictions = Program::all()->pluck('program_title', 'program_title')->toArray();
-                                                    break;
-                                                case 'program & year-level':
-                                                    $programs = Program::all()->pluck('program_title', 'program_title')->toArray();
-                                                    $years = [
-                                                        '1st Year' => 1,
-                                                        '2nd Year' => 2,
-                                                        '3rd Year' => 3,
-                                                        '4th Year' => 4,
-                                                        '5th Year' => 5,
-                                                        '6th Year' => 6,
-                                                        '7th Year' => 7,
-                                                    ];
-                                                
-                                                    foreach ($programs as $programId => $programName) {
-                                                        foreach ($years as $yearId => $yearName) {
-                                                            $restrictions[$programId . '_' . $yearId] = $programName . ' - ' . $yearName;
-                                                        }
-                                                    }
-                                                    break;
                                                 case 'user':
                                                     $restrictions = Instructor::all()->pluck('faculty_name', 'faculty_name')->toArray();
+                                                    break;
+                                                case 'gender':
+                                                    $restrictions = BiologicalSex::all()->pluck('sex', 'id')->toArray();
                                                     break;
                                                 default:
                                                     $restrictions = ['Unknown scope'];

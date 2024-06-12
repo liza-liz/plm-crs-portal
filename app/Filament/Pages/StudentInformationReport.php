@@ -75,7 +75,7 @@ class StudentInformationReport extends Page implements HasForms, HasTable
                 TextColumn::make('course.subject_code')
                     ->label('Subject Code')
                     ->formatStateUsing(function ($state, $record) {
-                        return $state . '-' . $record->section;
+                        return $state;
                     })
                     ->sortable(),
                 TextColumn::make('block.section')

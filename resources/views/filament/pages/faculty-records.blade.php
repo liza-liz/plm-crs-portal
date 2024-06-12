@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <div class="border-4 border-yellow-500 bg-transparent p-6 rounded-md shadow-sm">
+    <div >
         <form wire:submit.prevent="create">
             {{ $this->form }}
 

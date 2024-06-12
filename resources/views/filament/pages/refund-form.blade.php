@@ -1,12 +1,12 @@
 <x-filament-panels::page>
     <div class="flex flex-col items-center justify-center h-full">
         <form wire:submit.prevent="submitForm" method="post" class="w-full max-w-lg">
-            <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="grid grid-cols-1 gap-4 mb-8">
                 {{ $this->form }}
             </div>
 
             <div class="flex justify-center mt-6">
-                <button type="submit" class="inline-flex items-center px-4 py-2 mt-1 text-sm font-medium text-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" style="background-color: #ca8a04;" onmouseover="this.style.backgroundColor='#eab308'" onmouseout="this.style.backgroundColor='#ca8a04'">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm" style="background-color: #ca8a04;" onmouseover="this.style.backgroundColor='#eab308'" onmouseout="this.style.backgroundColor='#ca8a04'">
                     Submit
                 </button>
             </div>

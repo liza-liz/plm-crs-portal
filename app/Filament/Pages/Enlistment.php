@@ -136,9 +136,7 @@ class Enlistment extends Page implements HasTable
                         $this->viewStudentDetails($record->id);
                     })
                     ->requiresConfirmation()
-                    ->modalHeading('Edit Student Block')
-                    ->modalSubheading('')
-                    ->modalButton('Confirm'),
+                    ->modalHeading('Edit Student Block'),
             ])
             ->bulkActions([
                 BulkAction::make('assignSpecificBlock')
@@ -167,9 +165,7 @@ class Enlistment extends Page implements HasTable
                         }
                     })
                     ->requiresConfirmation()
-                    ->modalHeading('Assign Block')
-                    ->modalSubheading('')
-                    ->modalButton('Confirm'),
+                    ->modalHeading('Assign Block'),
             ]);
     }
 
@@ -190,9 +186,7 @@ class Enlistment extends Page implements HasTable
                     $this->dispatch('$refresh');
                 })
                 ->requiresConfirmation()
-                ->modalHeading('Set Block Capacity')
-                ->modalSubheading('')
-                ->modalButton('Confirm'),
+                ->modalHeading('Set Block Capacity'),
             HeaderAction::make('automaticEnlistment')
                 ->label('Automatic Enlistment')
                 ->form([
@@ -221,8 +215,6 @@ class Enlistment extends Page implements HasTable
                 })
                 ->requiresConfirmation()
                 ->modalHeading('Automatic Enlistment')
-                ->modalSubheading('')
-                ->modalButton('Confirm')
                 ->disabled(!Session::has('block_capacity')),
         ];
     }
