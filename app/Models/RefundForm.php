@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Models;
 
 use App\Models\Aysem;
 use App\Models\Assessment;
