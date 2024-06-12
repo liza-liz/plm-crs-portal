@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\StudyPlanValidations;
+use App\Models\LOARequest;
 use App\Models\Course;
 use App\Models\Classes;
 use App\Models\Aysem;
@@ -17,18 +17,18 @@ use Filament\Forms\Components\Section;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms;
 
-class StudyPlanValidation extends Page implements HasTable
+class LOARequests extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-o-identification';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     protected static ?string $navigationGroup = 'Transactions';
-    protected static string $view = 'filament.pages.study-plan-validation-page';
+    protected static string $view = 'filament.pages.loa-requests';
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(StudyPlanValidations::query())
+            ->query(LOARequest::query())
             ->columns([
                 TextColumn::make('student_no')->label('Student Number')->sortable(),
                 TextColumn::make('year_level')->label('Year Level')->sortable(),
@@ -37,7 +37,7 @@ class StudyPlanValidation extends Page implements HasTable
             ])
             ->actions([
                 Action::make('view')
-                    ->label('View')
+                    ->label('View Study Plan')
                     ->form(function ($record) {
                         $studyPlanIds = json_decode($record->study_plan, true);
                         $courses = Course::whereIn('subject_code', $studyPlanIds)->get();
@@ -193,6 +193,41 @@ class StudyPlanValidation extends Page implements HasTable
                         ]);
                     })
                     ->modalHeading('Study Plan Details')
+                    ->modalButton('Close')
+                    ->modalWidth('6xl'),
+
+                Action::make('view_forms')
+                    ->label('View All Forms')
+                    ->form(function ($record) {
+                        // Placeholder content
+                        return [
+                            Section::make('')
+                                ->schema([
+                                    TextInput::make('loa_form')
+                                        ->default('This is where the loa form will appear supposedly.')
+                                        ->disabled(),
+                                ]),
+                            Section::make('')
+                                ->schema([
+                                    TextInput::make('letter_of_request')
+                                        ->default('This is where the letter of request will appear supposedly.')
+                                        ->disabled(),
+                                ]),
+                            Section::make('')
+                                ->schema([
+                                    TextInput::make('note_of_undertaking')
+                                        ->default('This is where the note of undertaking will appear supposedly.')
+                                        ->disabled(),
+                                ]),
+                            Section::make('')
+                                ->schema([
+                                    TextInput::make('clearance')
+                                        ->default('This is where the clearance will appear supposedly.')
+                                        ->disabled(),
+                                ]),
+                        ];
+                    })
+                    ->modalHeading('LOA Request Details')
                     ->modalButton('Close')
                     ->modalWidth('6xl'),
 
