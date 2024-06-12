@@ -97,6 +97,7 @@ class Enlistment extends Page implements HasTable
             ->actions([
                 Action::make('edit')
                     ->label('View')
+              		->color('info')
                     ->form(function ($record) use ($program) {
                         $currentAYSem = Aysem::orderBy('date_start', 'desc')->first();
 
@@ -141,6 +142,7 @@ class Enlistment extends Page implements HasTable
             ->bulkActions([
                 BulkAction::make('assignSpecificBlock')
                     ->label('Assign Specific Block')
+              		->color('info')
                     ->form(function () use ($program) {
                         $currentAYSem = Aysem::orderBy('date_start', 'desc')->first();
 
@@ -174,6 +176,7 @@ class Enlistment extends Page implements HasTable
         return [
             HeaderAction::make('setBlockCapacity')
                 ->label('Set Block Capacity')
+          		->color('info')
                 ->form([
                     TextInput::make('block_capacity')
                         ->label('Block Capacity')
@@ -187,8 +190,10 @@ class Enlistment extends Page implements HasTable
                 })
                 ->requiresConfirmation()
                 ->modalHeading('Set Block Capacity'),
-            HeaderAction::make('automaticEnlistment')
+            
+          	HeaderAction::make('automaticEnlistment')
                 ->label('Automatic Enlistment')
+          		->color('info')
                 ->form([
                     Select::make('assignment_type')
                         ->label('Assignment Type')

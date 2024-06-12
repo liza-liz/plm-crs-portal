@@ -42,6 +42,7 @@ class AddDropRequests extends Page implements HasTable
             ->actions([
                 Action::make('view_add_drop')
                     ->label('View Add/Drop Form')
+              		->color('info')
                     ->form(function ($record) {
                         $addDropForm = json_decode($record->add_drop_form, true);
                         $addedCourses = $addDropForm['added'] ?? [];
@@ -95,6 +96,7 @@ class AddDropRequests extends Page implements HasTable
 
                Action::make('view')
                     ->label('View Study Plan')
+              		->color('info')
                     ->form(function ($record) {
                             $studyPlanIds = json_decode($record->study_plan, true);
                             $courses = Course::whereIn('subject_code', $studyPlanIds)->get();

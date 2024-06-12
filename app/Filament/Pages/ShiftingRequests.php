@@ -16,6 +16,8 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms;
+use Filament\Forms\Components\ViewField;
+use App\Filament\Forms\Components\PdfViewer;
 
 class ShiftingRequests extends Page implements HasTable
 {
@@ -44,6 +46,7 @@ class ShiftingRequests extends Page implements HasTable
 
                Action::make('view')
                     ->label('View Study Plan')
+              		->color('info')
                     ->form(function ($record) {
                             $studyPlanIds = json_decode($record->study_plan, true);
                             $courses = Course::whereIn('subject_code', $studyPlanIds)->get();
@@ -204,29 +207,36 @@ class ShiftingRequests extends Page implements HasTable
               
                 Action::make('view_forms')
                     ->label('View All Forms')
+              		->color('info')
                     ->form(function ($record) {
                         return [
                              TextInput::make('new_degree_program')
                                 ->default($record->new_degree_program)
                                 ->disabled()
-                                ->extraAttributes(['class' => 'text-2xl font-bold text-center mb-4']), // Add custom classes here
-                            Section::make('')
+                                ->extraAttributes(['class' => 'text-2xl font-bold text-center mb-4']), // styles
+                              Section::make('Letter of Intent')
                                 ->schema([
-                                    TextInput::make('letter_of_intent')
-                                        ->default('This is where the letter of request will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('letter_of_intent')
+                                        ->label('Letter of Intent')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->letter_of_intent,
+                                        ]),
                                 ]),
-                            Section::make('')
+                            Section::make('Note of Undertaking')
                                 ->schema([
-                                    TextInput::make('note_of_undertaking')
-                                        ->default('This is where the note of undertaking will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('note_of_undertaking')
+                                        ->label('Note of Undertaking')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->note_of_undertaking,
+                                        ]),
                                 ]),
-                            Section::make('')
+                             Section::make('Shifting Form')
                                 ->schema([
-                                    TextInput::make('shifting_form')
-                                        ->default('This is where the clearance will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('shifting_form')
+                                        ->label('ShiftingForm')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->shifting_form,
+                                        ]),
                                 ]),
                         ];
                     })

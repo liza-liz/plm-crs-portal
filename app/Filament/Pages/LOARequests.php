@@ -14,8 +14,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\FileUpload;
+use App\Filament\Forms\Components\PdfViewer;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms;
+use Filament\Forms\Components\ViewField;
+
 
 class LOARequests extends Page implements HasTable
 {
@@ -25,7 +29,7 @@ class LOARequests extends Page implements HasTable
     protected static ?string $navigationGroup = 'Transactions';
     protected static string $view = 'filament.pages.loa-requests';
 
-    public function table(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
             ->query(LOARequest::query())
@@ -38,6 +42,7 @@ class LOARequests extends Page implements HasTable
             ->actions([
                 Action::make('view')
                     ->label('View Study Plan')
+              		->color('info')
                     ->form(function ($record) {
                         $studyPlanIds = json_decode($record->study_plan, true);
                         $courses = Course::whereIn('subject_code', $studyPlanIds)->get();
@@ -198,39 +203,48 @@ class LOARequests extends Page implements HasTable
 
                 Action::make('view_forms')
                     ->label('View All Forms')
+                    ->color('info')
                     ->form(function ($record) {
-                        // Placeholder content
                         return [
-                            Section::make('')
+                            Section::make('LOA Form')
                                 ->schema([
-                                    TextInput::make('loa_form')
-                                        ->default('This is where the loa form will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('loa_form')
+                                        ->label('LOA Form')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->loa_form,
+                                        ]),
                                 ]),
-                            Section::make('')
+                            Section::make('Letter of Request')
                                 ->schema([
-                                    TextInput::make('letter_of_request')
-                                        ->default('This is where the letter of request will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('letter_of_request')
+                                        ->label('Letter of Request')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->letter_of_request,
+                                        ]),
                                 ]),
-                            Section::make('')
+                            Section::make('Note of Undertaking')
                                 ->schema([
-                                    TextInput::make('note_of_undertaking')
-                                        ->default('This is where the note of undertaking will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('note_of_undertaking')
+                                        ->label('Note of Undertaking')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->note_of_undertaking,
+                                        ]),
                                 ]),
-                            Section::make('')
+                            Section::make('Clearance')
                                 ->schema([
-                                    TextInput::make('clearance')
-                                        ->default('This is where the clearance will appear supposedly.')
-                                        ->disabled(),
+                                    ViewField::make('clearance')
+                                        ->label('Clearance')
+                                        ->view('filament.components.pdf-viewer', [
+                                            'url' => 'https://student-portal.plmerp24.cloud/uploads/' . $record->clearance,
+                                        ]),
                                 ]),
                         ];
                     })
                     ->modalHeading('LOA Request Details')
                     ->modalButton('Close')
                     ->modalWidth('6xl'),
-
+              
+              
                 Action::make('approve')
                     ->label('Approve')
                     ->action(function ($record) {

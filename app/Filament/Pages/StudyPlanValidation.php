@@ -38,6 +38,7 @@ class StudyPlanValidation extends Page implements HasTable
             ->actions([
                 Action::make('view')
                     ->label('View')
+                    ->color('info')
                     ->form(function ($record) {
                         $studyPlanIds = json_decode($record->study_plan, true);
                         $courses = Course::whereIn('subject_code', $studyPlanIds)->get();

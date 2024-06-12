@@ -59,6 +59,7 @@ class BlockclassesManagement extends Page implements HasTable
             ->actions([
                 Action::make('view')
                     ->label('View Class Schedules')
+                    ->color('info')
                     ->form(function ($record) {
                         // Retrieve the class schedules and sort by name of course
                         $classSchedules = $record->classes->flatMap(function ($class) {
@@ -102,69 +103,70 @@ class BlockclassesManagement extends Page implements HasTable
             ]);
     }
 
-  protected function getHeaderActions(): array
-{
-    $currentAYSem = Aysem::orderBy('date_start', 'desc')->first();
-    $programBSCS = Program::where('program_code', 'BSCS')->orderBy('id')->first();
+    protected function getHeaderActions(): array
+    {
+        $currentAYSem = Aysem::orderBy('date_start', 'desc')->first();
+        $programBSCS = Program::where('program_code', 'BSCS')->orderBy('id')->first();
 
-    return [
-        HeaderAction::make('create')
-            ->label('Add Block')
-            ->form([
-                Select::make('section')
-                    ->label('Section')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                        '4' => '4',
-                    ])
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $blockSectionMap = [
-                            '1' => 'B1',
-                            '2' => 'B2',
-                            '3' => 'B3',
-                            '4' => 'B4',
-                        ];
+        return [
+            HeaderAction::make('create')
+                ->label('Add Block')
+                ->color('info')
+                ->form([
+                    Select::make('section')
+                        ->label('Section')
+                        ->options([
+                            '1' => '1',
+                            '2' => '2',
+                            '3' => '3',
+                            '4' => '4',
+                        ])
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            $blockSectionMap = [
+                                '1' => 'B1',
+                                '2' => 'B2',
+                                '3' => 'B3',
+                                '4' => 'B4',
+                            ];
 
-                        if (array_key_exists($state, $blockSectionMap)) {
-                            $set('block_id', $blockSectionMap[$state]);
-                            $set('block_id_disabled', false); // Enabled block_id after it is set because it's bugging
-                        } else {
-                            $set('block_id', null);
-                            $set('block_id_disabled', true); // Keep block_id disabled
-                        }
-                    })
-                    ->validationAttribute('section')
-                    ->rule(static function (\Filament\Forms\Get $get) use ($currentAYSem) {
-                        return 'unique:blocks,section,NULL,id,year_level,' . $get('year_level') . ',program_id,' . Program::where('program_code', 'BSCS')->first()->id . ',aysem_id,' . ($currentAYSem ? $currentAYSem->id : 'NULL');
-                    }),
-                TextInput::make('block_id')
-                    ->label('Block ID')
-               		 ->hint('This field is automatically populated based on the selected section and should not be edited.')
-                    ->disabled(fn(\Filament\Forms\Get $get) => $get('block_id_disabled') ?? true)
-                    ->required(),
-                TextInput::make('year_level')
-                    ->label('Year Level')
-                    ->required(),
-                TextInput::make('academic_year')
-                    ->label('Academic Year')
-                    ->default($currentAYSem ? $currentAYSem->academic_year : 'N/A')
-                    ->disabled(),
-            ])
-            ->action(function (array $data) use ($currentAYSem, $programBSCS) {
-                Block::create([
-                    'block_id' => $data['block_id'],
-                    'section' => $data['section'],
-                    'program_id' => $programBSCS->id,
-                    'year_level' => $data['year_level'],
-                    'aysem_id' => $currentAYSem->id,
-                ]);
-                $this->dispatch('notify', 'Block created successfully.');
-            }),
-    ];
-}
+                            if (array_key_exists($state, $blockSectionMap)) {
+                                $set('block_id', $blockSectionMap[$state]);
+                                $set('block_id_disabled', false); // Enabled block_id after it is set because it's bugging
+                            } else {
+                                $set('block_id', null);
+                                $set('block_id_disabled', true); // Keep block_id disabled
+                            }
+                        })
+                        ->validationAttribute('section')
+                        ->rule(static function (\Filament\Forms\Get $get) use ($currentAYSem) {
+                            return 'unique:blocks,section,NULL,id,year_level,' . $get('year_level') . ',program_id,' . Program::where('program_code', 'BSCS')->first()->id . ',aysem_id,' . ($currentAYSem ? $currentAYSem->id : 'NULL');
+                        }),
+                    TextInput::make('block_id')
+                        ->label('Block ID')
+                        ->hint('This field is automatically populated based on the selected section and should not be edited.')
+                        ->disabled(fn(\Filament\Forms\Get $get) => $get('block_id_disabled') ?? true)
+                        ->required(),
+                    TextInput::make('year_level')
+                        ->label('Year Level')
+                        ->required(),
+                    TextInput::make('academic_year')
+                        ->label('Academic Year')
+                        ->default($currentAYSem ? $currentAYSem->academic_year : 'N/A')
+                        ->disabled(),
+                ])
+                ->action(function (array $data) use ($currentAYSem, $programBSCS) {
+                    Block::create([
+                        'block_id' => $data['block_id'],
+                        'section' => $data['section'],
+                        'program_id' => $programBSCS->id,
+                        'year_level' => $data['year_level'],
+                        'aysem_id' => $currentAYSem->id,
+                    ]);
+                    $this->dispatch('notify', 'Block created successfully.');
+                }),
+        ];
+    }
 
 }
