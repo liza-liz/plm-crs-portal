@@ -41,7 +41,7 @@ class ScheduleResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Class Information')
+                Section::make('Information')
                     ->columns(4)
                     ->schema([
                         Components\Select::make('course_id') 
@@ -192,18 +192,17 @@ class ScheduleResource extends Resource
                                     ->required(),
                             ])
                         ]),
-                Section::make('Class Restriction')
+                Section::make('Restriction')
                     ->schema([
                         Components\Repeater::make('restrictions')
                             ->columns(3)
                             ->schema([
                                 Components\Select::make('scope')
                                 ->options([
-                                    'user' => ClassRestrictionScopeEnum::user->value,
-                                    'gender' => ClassRestrictionScopeEnum::gender->value,
+                                    'user' => 'User',
+                                    'gender' => 'Gender',
                                 ])
                                 ->live()
-                                ->preload()
                                 ->required(),
                                 Components\Select::make('restriction')
                                     ->options(function ($get):
@@ -215,7 +214,7 @@ class ScheduleResource extends Resource
                                                     $restrictions = Instructor::all()->pluck('faculty_name', 'faculty_name')->toArray();
                                                     break;
                                                 case 'gender':
-                                                    $restrictions = BiologicalSex::all()->pluck('sex', 'id')->toArray();
+                                                    $restrictions = BiologicalSex::all()->pluck('sex', 'sex')->toArray();
                                                     break;
                                                 default:
                                                     $restrictions = ['Unknown scope'];
