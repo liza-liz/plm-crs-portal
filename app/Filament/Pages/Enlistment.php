@@ -35,7 +35,6 @@ class Enlistment extends Page implements HasTable
     public $view_student_block;
     public $view_year_level;
     public $view_program_code;
-    public $view_section;
     public $blockCapacity;
 
     public function setYearLevel(int $yearLevel)
@@ -97,7 +96,7 @@ class Enlistment extends Page implements HasTable
             ])
             ->actions([
                 Action::make('edit')
-                    ->label('Edit')
+                    ->label('View')
                     ->form(function ($record) use ($program) {
                         $currentAYSem = Aysem::orderBy('date_start', 'desc')->first();
 
@@ -135,7 +134,11 @@ class Enlistment extends Page implements HasTable
                             'block_id' => $data['block_id'],
                         ]);
                         $this->viewStudentDetails($record->id);
-                    }),
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Edit Student Block')
+                    ->modalSubheading('')
+                    ->modalButton('Confirm'),
             ])
             ->bulkActions([
                 BulkAction::make('assignSpecificBlock')
@@ -162,9 +165,12 @@ class Enlistment extends Page implements HasTable
                                 'block_id' => $data['block_id'],
                             ]);
                         }
-                    }),
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Assign Block')
+                    ->modalSubheading('')
+                    ->modalButton('Confirm'),
             ]);
-
     }
 
     protected function getHeaderActions(): array
@@ -182,7 +188,11 @@ class Enlistment extends Page implements HasTable
                 ->action(function (array $data) {
                     Session::put('block_capacity', $data['block_capacity']);
                     $this->dispatch('$refresh');
-                }),
+                })
+                ->requiresConfirmation()
+                ->modalHeading('Set Block Capacity')
+                ->modalSubheading('')
+                ->modalButton('Confirm'),
             HeaderAction::make('automaticEnlistment')
                 ->label('Automatic Enlistment')
                 ->form([
@@ -209,6 +219,10 @@ class Enlistment extends Page implements HasTable
                         $this->batchAssignRandom($blockCapacity);
                     }
                 })
+                ->requiresConfirmation()
+                ->modalHeading('Automatic Enlistment')
+                ->modalSubheading('')
+                ->modalButton('Confirm')
                 ->disabled(!Session::has('block_capacity')),
         ];
     }
